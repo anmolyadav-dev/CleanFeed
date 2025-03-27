@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="sticky inset-x-0 top-0 z-30 text-black flex items-center justify-between px-4 max-w-lg lg:max-w-6xl md:max-w-2xl mx-auto transition-all border-gray-200 backdrop-blur-lg">
+    <nav className="sticky inset-x-0 top-0 z-30 text-black pt-5 flex items-center justify-between px-4 max-w-lg lg:max-w-6xl md:max-w-2xl mx-auto transition-all border-gray-200 backdrop-blur-lg">
       <div className="flex items-center">
         <Link
           href="/"
@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
 
       <div className="flex items-center space-x-5 border border-zinc-700 rounded-xl p-2 transition-all duration-300 hover:border-zinc-600 hover:bg-zinc-700">
         <Link
-          href="https://github.com/anmolyadav-dev/CleanFeed"
+          href="https://github.com"
           target="_blank"
           rel="noopener noreferrer"
           className="w-full"

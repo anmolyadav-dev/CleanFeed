@@ -241,7 +241,7 @@ const Analyze = ()=>{
         });
     };
     const calculateSensitivity = (inputText)=>{
-        // Api call
+        // Placeholder for actual sensitivity calculation
         return 100;
     };
     const getSeverityLevel = (score)=>{
