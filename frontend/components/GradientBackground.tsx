@@ -20,7 +20,7 @@ const GradientBackground: React.FC = () => {
           ],
         }}
         transition={{
-          duration: 20,
+          duration: 10,
           repeat: Infinity,
           ease: "easeInOut",
         }}
