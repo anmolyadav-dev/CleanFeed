@@ -82,7 +82,9 @@ const ContentAnalysisDashboard: React.FC = () => {
 
     const renderUploadPage = () => (
         <div
-            className="flex flex-col items-center justify-center space-y-6 p-8"
+            className={`flex flex-col items-center justify-center space-y-6 p-8 mt-${
+                selectedFiles.length > 0 ? "10" : "0"
+            }`}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
         >
@@ -116,7 +118,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                     Drag and drop files here or click to select
                 </p>
                 <button className="bg-white/10 hover:bg-white/20 text-white/80 px-6 py-2 rounded-lg transition-all">
-                    Select Files
+                    Select Image
                 </button>
             </div>
             {selectedFiles.length > 0 && (
@@ -127,7 +129,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                             <div className="flex gap-2 items-center justify-center">
                                 <li key={index}>{file.name}</li>{" "}
                                 <button
-                                    className="px-2 py-1 bg-red-900 rounded-md cursor-pointer text-center"
+                                    className="px-2 py-1 rounded-md cursor-pointer text-center"
                                     onClick={(e) => setSelectedFiles([])}
                                 >
                                     <svg
@@ -136,7 +138,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                                         viewBox="0 0 24 24"
                                         stroke-width="1.5"
                                         stroke="currentColor"
-                                        className="size-6"
+                                        className="size-6 hover:scale-110"
                                     >
                                         <path
                                             stroke-linecap="round"
@@ -158,7 +160,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                     disabled={!selectedFiles[0] || loadingState}
                     onClick={handleImageSendToBackend}
                 >
-                    {!loadingState ? "Upload Image" : <Loader />}
+                    {!loadingState ? "Analyze Image" : <Loader />}
                 </button>
             </div>
         </div>
