@@ -96,16 +96,16 @@ def analyze_text(query):
             elif "Recommended Action:" in line:
                 recommended_action = line.split(":", 1)[1].strip()
 
-        severity_percentage = severity_map.get(severity, "Unknown")
-        sensitivity_percentage = sensitivity_map.get(sensitivity, "Unknown")
+        severity_percentage = severity_map.get(severity, 0)
+        sensitivity_percentage = sensitivity_map.get(sensitivity, 0)
         return {
             "type":"text",
             "original_content": query,
             "guideline_violated": guideline_violated,
             "severity_label": severity.capitalize(),
-            "severity_percentage": f"{severity_percentage}%",
+            "severity_percentage": f"{severity_percentage}",
             "sensitivity_label": sensitivity.capitalize(),
-            "sensitivity_percentage": f"{sensitivity_percentage}%",
+            "sensitivity_percentage": f"{sensitivity_percentage}",
             "explanation": explanation,
             "recommended_action": recommended_action,
             "retrieved_context": context
