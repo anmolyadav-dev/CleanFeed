@@ -66,7 +66,7 @@ const ContentAnalysisDashboard: React.FC = () => {
             setLoadingState(false);
         } catch (error) {
             console.error("Network Error:", error);
-            setLoadingState(true);
+            setLoadingState(false);
         }
     };
 
@@ -128,8 +128,10 @@ const ContentAnalysisDashboard: React.FC = () => {
             )}
             <div>
                 <button
-                    className="px-8 py-4 bg-white/10 hover:bg-white/20 cursor-pointer mt-10 rounded-lg"
-                    disabled={!selectedFiles[0]}
+                    className={`${
+                        !loadingState ? "cursor-pointer" : "cursor-not-allowed"
+                    } px-8 py-4 bg-white/10 hover:bg-white/20 cursor-pointer mt-10 rounded-lg`}
+                    disabled={!selectedFiles[0] || loadingState}
                     onClick={handleImageSendToBackend}
                 >
                     {!loadingState ? "Upload Image" : <Loader />}
@@ -166,11 +168,12 @@ const ContentAnalysisDashboard: React.FC = () => {
             );
             const result = await response.json();
             console.log("Backend Response:", result);
+            setSelectedPage("analysis");
             setAnalysisResult(result);
             setLoadingState(false);
         } catch (error) {
             console.error("Network Error:", error);
-            setLoadingState(true);
+            setLoadingState(false);
         }
     };
 
@@ -185,10 +188,13 @@ const ContentAnalysisDashboard: React.FC = () => {
             />
             <div className="flex justify-end mt-4">
                 <button
-                    className={`bg-white/10 hover:bg-white/20 text-white/80 px-6 py-2 rounded-lg transition-all 
+                    className={`${
+                        !loadingState ? "cursor-pointer" : "cursor-not-allowed"
+                    } hover:bg-white/20 bg-white/10 px-6 py-3 rounded-lg transition-all cursor-pointer 
                         
                     `}
                     onClick={handleTextSendToBackend}
+                    disabled={loadingState || inputText.length == 0}
                 >
                     {!loadingState ? "Analyze" : <Loader />}
                 </button>
@@ -297,17 +303,25 @@ const ContentAnalysisDashboard: React.FC = () => {
                         {["Critical", "High", "Medium", "Low"].map(
                             (level, index) => (
                                 <div key={level} className="flex items-center">
-                                    <span
-                                        className="w-4 h-4 rounded-full mr-2 opacity-50"
-                                        style={{
-                                            backgroundColor: `rgba(255,255,255,${
-                                                1 - index * 0.25
-                                            })`,
-                                        }}
-                                    ></span>
-                                    <span className="text-white/70">
-                                        {level}: Risk Level
-                                    </span>
+                                    {level ==
+                                    analysisResult.sensitivity_label ? (
+                                        <>
+                                            {" "}
+                                            <span
+                                                className="w-4 h-4 rounded-full mr-2 opacity-50"
+                                                style={{
+                                                    backgroundColor: `rgba(255,255,255,${
+                                                        1 - index * 0.25
+                                                    })`,
+                                                }}
+                                            ></span>
+                                            <span className="text-white/70">
+                                                {level}: Risk Level
+                                            </span>
+                                        </>
+                                    ) : (
+                                        ""
+                                    )}
                                 </div>
                             )
                         )}
