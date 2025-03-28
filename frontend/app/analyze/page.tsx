@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Loader from "../../components/Loader";
 import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 
 const ContentAnalysisDashboard: React.FC = () => {
@@ -8,8 +9,10 @@ const ContentAnalysisDashboard: React.FC = () => {
     >("upload");
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [imageResult, setImageResult] = useState(null);
-    const [textResult, setTextResult] = useState(null);
+    const [analysisResult, setAnalysisResult] = useState<any>({});
+
+    const [loadingState, setLoadingState] = useState(false);
+
     const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const files = Array.from(event.target.files);
@@ -39,6 +42,7 @@ const ContentAnalysisDashboard: React.FC = () => {
     };
 
     const handleImageSendToBackend = async () => {
+        setLoadingState(true);
         if (selectedFiles.length === 0) {
             alert("Please select a file first!");
             return;
@@ -58,9 +62,11 @@ const ContentAnalysisDashboard: React.FC = () => {
             const result = await response.json();
             console.log("Backend Response:", result);
             setSelectedPage("analysis");
-            setImageResult(result);
+            setAnalysisResult(result);
+            setLoadingState(false);
         } catch (error) {
             console.error("Network Error:", error);
+            setLoadingState(true);
         }
     };
 
@@ -126,7 +132,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                     disabled={!selectedFiles[0]}
                     onClick={handleImageSendToBackend}
                 >
-                    Upload Image
+                    {!loadingState ? "Upload Image" : <Loader />}
                 </button>
             </div>
         </div>
@@ -137,6 +143,7 @@ const ContentAnalysisDashboard: React.FC = () => {
     //  sending text to backend with this function
 
     const handleTextSendToBackend = async () => {
+        setLoadingState(true);
         if (inputText.length === 0) {
             alert("Please enter some text first");
             return;
@@ -159,9 +166,11 @@ const ContentAnalysisDashboard: React.FC = () => {
             );
             const result = await response.json();
             console.log("Backend Response:", result);
-            // setAnalysisResult(result);
+            setAnalysisResult(result);
+            setLoadingState(false);
         } catch (error) {
             console.error("Network Error:", error);
+            setLoadingState(true);
         }
     };
 
@@ -176,10 +185,12 @@ const ContentAnalysisDashboard: React.FC = () => {
             />
             <div className="flex justify-end mt-4">
                 <button
-                    className="bg-white/10 hover:bg-white/20 text-white/80 px-6 py-2 rounded-lg transition-all"
+                    className={`bg-white/10 hover:bg-white/20 text-white/80 px-6 py-2 rounded-lg transition-all 
+                        
+                    `}
                     onClick={handleTextSendToBackend}
                 >
-                    Analyze
+                    {!loadingState ? "Analyze" : <Loader />}
                 </button>
             </div>
         </div>
@@ -188,6 +199,27 @@ const ContentAnalysisDashboard: React.FC = () => {
     // -----------------------------------------------------------------------------------------------------------------
 
     // Render method and other parts remain the same as in the original code
+    // values for analysis page
+    // analysisResult.type
+    // analysisResult.severity_label
+    // analysisResult.severity_percentage
+    // analysisResult.sensitivity_percentage
+    // analysisResult.recommended_action
+    // analysisResult.guideline_violated
+
+    const [guidelinesViolated, setGuidelinesViolated] = useState(null);
+    useEffect(() => {
+        if (
+            analysisResult.type === "image" &&
+            analysisResult.violations &&
+            analysisResult.violations.length > 0
+        ) {
+            setGuidelinesViolated(analysisResult.violations[0].guideline_name);
+        } else {
+            setGuidelinesViolated(analysisResult.guideline_violated);
+        }
+    }, [analysisResult]);
+
     const renderAnalysisPage = () => (
         <div className="grid grid-cols-2 gap-8">
             {/* Left Side - Analysis */}
@@ -206,7 +238,8 @@ const ContentAnalysisDashboard: React.FC = () => {
                             className="radial-progress"
                             style={
                                 {
-                                    "--value": 45,
+                                    "--value":
+                                        analysisResult.sensitivity_percentage,
                                     "--size": "10rem",
                                     "--thickness": "1.5rem",
                                 } as React.CSSProperties
@@ -220,7 +253,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5, duration: 0.5 }}
                             >
-                                45%
+                                {analysisResult.sensitivity_percentage}%
                             </motion.span>
                         </motion.div>
                     </div>
@@ -234,7 +267,8 @@ const ContentAnalysisDashboard: React.FC = () => {
                             className="radial-progress"
                             style={
                                 {
-                                    "--value": 75,
+                                    "--value":
+                                        analysisResult.severity_percentage,
                                     "--size": "10rem",
                                     "--thickness": "1.5rem",
                                 } as React.CSSProperties
@@ -248,7 +282,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5, duration: 0.5 }}
                             >
-                                75%
+                                {analysisResult.severity_percentage}%
                             </motion.span>
                         </motion.div>
                     </div>
@@ -292,9 +326,15 @@ const ContentAnalysisDashboard: React.FC = () => {
                         Violated Guidelines
                     </h3>
                     <ul className="list-disc list-inside space-y-2 text-white/60">
-                        <li>Potential Inappropriate Content</li>
-                        <li>Risk of Harmful Language</li>
-                        <li>Sensitive Topic Detection</li>
+                        {analysisResult.severity_percentage > 10 ? (
+                            <>
+                                <li>Potential Inappropriate Content</li>
+                                <li>Risk of Harmful Language</li>
+                                <li>{guidelinesViolated}</li>
+                            </>
+                        ) : (
+                            <li>No guidelines violated</li>
+                        )}
                     </ul>
                 </div>
 
@@ -302,11 +342,29 @@ const ContentAnalysisDashboard: React.FC = () => {
                     <h3 className="text-lg font-semibold mb-4 text-white/70">
                         Suggested Actions
                     </h3>
-                    <ul className="list-disc list-inside space-y-2 text-white/60">
+                    {/* <ul className="list-disc list-inside space-y-2 text-white/60">
                         <li>Review and Modify Content</li>
                         <li>Apply Content Filters</li>
                         <li>Implement Contextual Warnings</li>
                         <li>Consult Content Guidelines</li>
+                    </ul> */}
+
+                    <ul className="list-disc list-inside space-y-2 text-white/60">
+                        {analysisResult.severity_percentage > 10 ? (
+                            <>
+                                <li>Review and Modify Content</li>
+                                <li>Apply Content Filters</li>
+                                <li>Implement Contextual Warnings</li>
+                                {analysisResult.recommended_action.split(" ")
+                                    .length > 1 ? (
+                                    <li>{analysisResult.recommended_action}</li>
+                                ) : (
+                                    <span></span>
+                                )}
+                            </>
+                        ) : (
+                            <li>No suggested action for this content</li>
+                        )}
                     </ul>
                 </div>
             </div>
