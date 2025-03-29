@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
 
             <div className="flex items-center space-x-5 border border-zinc-700 rounded-xl p-2 transition-all duration-300 hover:border-zinc-600 hover:bg-zinc-700">
                 <Link
-                    href="https://github.com"
+                    href="https://github.com/anmolyadav-dev/sentinal_scan"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full"
