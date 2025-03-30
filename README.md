@@ -1,5 +1,5 @@
 
-# Sentinal Scan
+# Sentinel Scan
 The AI-Powered Content Moderation System is a next-generation, intelligent moderation tool designed to scan and evaluate text, images, and videos before they are uploaded. Using advanced machine learning (ML), natural language processing (NLP), and generative AI, the system ensures that harmful content never goes live, providing a safe and compliant digital environment.
 
 
