@@ -48,7 +48,7 @@ The **AI-Powered Content Moderation System** operates through a structured pipel
 - **Guidelines** (from YouTube, Instagram, X, etc.) are used to fine-tune moderation rules.  
 - **Web scraping technologies** (`Selenium`, `BeautifulSoup`) help keep guidelines up to date.  
 
-### 5️⃣ Fine-Tuned Model (Llama, Gemini, Unslloth)  
+### 5️⃣ Fine-Tuned Model (Llama, Gemini, Unsloth)  
 - The system leverages **fine-tuned models** for improved accuracy in detecting harmful content.  
 - Uses **similarity search** to compare new content with flagged data.  
 
