@@ -56,7 +56,7 @@ const ContentAnalysisDashboard: React.FC = () => {
 
         try {
             const response = await fetch(
-                "https://n6344777-8000.inc1.devtunnels.ms/image",
+                "http://localhost:8000/image",
                 {
                     method: "POST",
                     body: formData, // Send formData directly, not as a string
@@ -136,7 +136,7 @@ const ContentAnalysisDashboard: React.FC = () => {
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
                                         viewBox="0 0 24 24"
-                                        stroke-width="1.5"
+                                        strokeWidth="1.5"
                                         stroke="currentColor"
                                         className="size-6 hover:scale-110"
                                     >
@@ -183,7 +183,7 @@ const ContentAnalysisDashboard: React.FC = () => {
 
         try {
             const response = await fetch(
-                "https://n6344777-8000.inc1.devtunnels.ms/text",
+                "http://localhost:8000/text",
                 {
                     method: "POST",
                     headers: {
